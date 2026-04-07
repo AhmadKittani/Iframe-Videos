@@ -17,7 +17,7 @@ A minimalist, single-page application for viewing videos and embedded content vi
 
 ## How to Use
 
-1. **Open the page** - Load `<!DOCTYPE html>.html` in your browser
+1. **Open the page** - Visit the [live demo](https://ahmadkittani.github.io/Iframe-Videos/) or open `index.html` locally
 2. **Enter a URL** - Paste a link in the search field and click "Load" (or press Enter)
 3. **Watch** - View your content in the iframe
 4. **Fullscreen** - Click the fullscreen button to enter fullscreen mode
