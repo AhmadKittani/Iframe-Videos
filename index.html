@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 12px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        input::placeholder {
+            color: #666;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #555;
+            background-color: #222;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #ddd;
+        }
+        
+        button:active {
+            background-color: #bbb;
+        }
+        
+        .content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #content {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .controls {
+            display: none;
+        }
+
+        .button-group {
+            margin-top: 100vh;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .fullscreen-btn, .lock-btn {
+            padding: 10px 16px;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .fullscreen-btn:hover, .lock-btn:hover {
+            background-color: #444;
+            border-color: #666;
+        }
+
+        .fullscreen-btn:active, .lock-btn:active {
+            background-color: #555;
+        }
+
+        .lock-btn.locked {
+            background-color: #ff4444;
+            border-color: #ff6666;
+        }
+
+
+
+        .input-group.hidden {
+            display: none;
+        }
+
+        iframe:fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group" id="input-group">
+            <input 
+                type="text" 
+                id="url-input" 
+                placeholder="Paste link here..." 
+                spellcheck="false"
+            >
+            <button onclick="loadIframe()">Load</button>
+        </div>
+        <div class="content-wrapper">
+            <div id="content"></div>
+            <div class="controls">
+                <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+        <button class="lock-btn" id="lock-btn" onclick="toggleLock()">🔓 Unlock</button>
+    </div>
+
+    <script>
+        const input = document.getElementById('url-input');
+        const content = document.getElementById('content');
+        const inputGroup = document.getElementById('input-group');
+        const lockBtn = document.getElementById('lock-btn');
+        let isLocked = false;
+
+        function loadIframe() {
+            let url = input.value.trim();
+            if (!url) return;
+
+            // Convert YouTube watch links to embed format
+            if (url.includes('youtube.com/watch')) {
+                const videoId = new URL(url).searchParams.get('v');
+                if (videoId) url = `https://www.youtube.com/embed/${videoId}`;
+            }
+            // Handle youtu.be shortlinks
+            else if (url.includes('youtu.be/')) {
+                const videoId = url.split('youtu.be/')[1].split('?')[0];
+                url = `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            content.innerHTML = `<iframe 
+                src="${url}" 
+                id="main-iframe"
+                allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-presentations"
+            ></iframe>`;
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('main-iframe');
+            if (iframe) {
+                if (iframe.requestFullscreen) {
+                    iframe.requestFullscreen();
+                } else if (iframe.webkitRequestFullscreen) {
+                    iframe.webkitRequestFullscreen();
+                }
+            }
+        }
+
+        function toggleLock() {
+            isLocked = !isLocked;
+            inputGroup.classList.toggle('hidden', isLocked);
+            lockBtn.classList.toggle('locked', isLocked);
+            lockBtn.textContent = isLocked ? '🔒 Lock' : '🔓 Unlock';
+        }
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loadIframe();
+        });
+    </script>
+</body>
+</html>
