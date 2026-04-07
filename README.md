@@ -2,6 +2,10 @@
 
 A minimalist, single-page application for viewing videos and embedded content via iframe. Simply paste a link and watch fullscreen with a clean, distraction-free interface.
 
+## 🚀 Live Demo
+
+👉 **[https://ahmadkittani.github.io/Iframe-Videos/](https://ahmadkittani.github.io/Iframe-Videos/)**
+
 ## Features
 
 - **Simple URL Input** - Paste any embeddable link to load content
@@ -43,11 +47,11 @@ A minimalist, single-page application for viewing videos and embedded content vi
 
 ## Installation
 
-No installation required. Simply open the HTML file in any modern web browser.
+No installation required. Simply visit the [live demo](https://ahmadkittani.github.io/Iframe-Videos/) or download the `index.html` file and open it locally in your browser.
 
 ```bash
-# Clone or download the file
-open "<!DOCTYPE html>.html"
+# To use locally
+open index.html
 ```
 
 ## Browser Support
